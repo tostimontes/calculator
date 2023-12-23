@@ -32,11 +32,11 @@ let result;
 
 
 controlPad.addEventListener("click", function (event) {
+  if (eraseResult === true) {
+    currentDisplay.textContent = "";
+    eraseResult = false;
+  }
   if (event.target.classList.contains("number")) {
-    if (eraseResult === true) {
-      currentDisplay.textContent = "";
-      eraseResult = false;
-    }
     addToDisplay(event.target.textContent);
   } else if (event.target.id === "clear") {
     clearDisplay();
@@ -60,6 +60,15 @@ controlPad.addEventListener("click", function (event) {
   } else if (event.target.id === "equal") {
     number2 = Number(currentDisplay.textContent);
     operate();
+  } else if (event.target.id === "dot") {
+    if (currentDisplay.textContent.slice(-1) === "." || currentDisplay.textContent !== "") {
+      return null;
+    } else if (currentDisplay.textContent === "") {
+      addToDisplay("0");
+      addToDisplay(event.target.textContent);
+    } else {
+      addToDisplay(event.target.textContent);
+    }
   }
 });
 
@@ -103,14 +112,16 @@ function operate() {
       if (operand2 !== 0) {
         result = operand1 / operand2;
       } else {
-        // Handle division by zero if necessary
-        result = "Error";
+        alert("ERROR, PLEASE DO NOT DIVIDE BY 0");
+        currentDisplay.textContent = "";
+        operator = { sign: "", mathSymbol: "" };
+        return;
       }
       break;
     default:
-      // Handle unsupported operator
       result = "Unsupported operator";
   }
+  result = Math.round(result * 1000) / 1000;
   currentToAccumulated();
   number1 = result; // Update the global number1 with the operation result
   currentDisplay.textContent = result;
@@ -119,3 +130,5 @@ function operate() {
 
 // When calling operate, do not pass the global variables as parameters
 // Just call operate();
+
+
