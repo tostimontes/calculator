@@ -17,4 +17,67 @@ const padsAdd = document.querySelector('#add');
 const padsClear = document.querySelector('#clear');
 const padsUndo = document.querySelector('#undo');
 const padsEqual = document.querySelector('#equal');
+const controlPad = document.querySelector(".controls");
+const display = document.querySelector(".display");
+let number1;
+let number2;
+let operator = {
+    sign: "",
+    mathSymbol: ""
+};
 
+controlPad.addEventListener('click', function(event) {
+  if (event.target.classList.contains('number')) {
+    addToDisplay(event.target.textContent);
+  } else if (event.target.id === 'clear') {
+    clearDisplay();
+  } else if (event.target.id == 'undo') {
+    eraseLastChar();
+  } else if (event.target.classList.contains('operators')) {
+    number1 = Number(display.textContent);
+    addToDisplay(event.target.textContent);
+    operator.sign = event.target.textContent;
+    operator.mathSymbol = event.target.getAttribute('value');
+    clearDisplay();
+  } else if (event.target.id === 'equal') {
+    number2 = Number(display.textContent);
+    operate(number1, number2, operator);
+  }
+});
+
+padsClear.addEventListener('click', clearDisplay());
+
+function clearDisplay() {
+    display.textContent = "";
+}
+
+function eraseLastChar() {
+    display.textContent = display.textContent.slice(0, -1);
+}
+
+function addToDisplay(padContent) {
+    display.append(padContent);
+}
+
+function operate(number1, number2, operator) {
+  let result;
+  switch (operator.mathSymbol) {
+    case '+':
+      result = number1 + number2;
+      break;
+    case '-':
+      result = number1 - number2;
+      break;
+    case '*':
+      result = number1 * number2;
+      break;
+    case '/':
+      result = number1 / number2;
+      break;
+    default:
+      // Handle unsupported operator
+      result = 'Unsupported operator';
+  }
+  
+  display.textContent = `${number1} ${operator.sign} ${number2} = ${result}`;
+}
