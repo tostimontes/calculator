@@ -1,83 +1,121 @@
-const pads7 = document.querySelector('#seven');
-const pads4 = document.querySelector('#four');
-const pads1 = document.querySelector('#one');
-const pads0 = document.querySelector('#zero');
-const pads8 = document.querySelector('#eight');
-const pads5 = document.querySelector('#five');
-const pads2 = document.querySelector('#two');
-const pads00 = document.querySelector('#doublezero');
-const pads9 = document.querySelector('#nine');
-const pads6 = document.querySelector('#six');
-const pads3 = document.querySelector('#three');
-const padsDot = document.querySelector('#dot');
-const padsDivide = document.querySelector('#divide');
-const padsMultiply = document.querySelector('#multiply');
-const padsSubtract = document.querySelector('#subtract');
-const padsAdd = document.querySelector('#add');
-const padsClear = document.querySelector('#clear');
-const padsUndo = document.querySelector('#undo');
-const padsEqual = document.querySelector('#equal');
+const pads7 = document.querySelector("#seven");
+const pads4 = document.querySelector("#four");
+const pads1 = document.querySelector("#one");
+const pads0 = document.querySelector("#zero");
+const pads8 = document.querySelector("#eight");
+const pads5 = document.querySelector("#five");
+const pads2 = document.querySelector("#two");
+const pads00 = document.querySelector("#doublezero");
+const pads9 = document.querySelector("#nine");
+const pads6 = document.querySelector("#six");
+const pads3 = document.querySelector("#three");
+const padsDot = document.querySelector("#dot");
+const padsDivide = document.querySelector("#divide");
+const padsMultiply = document.querySelector("#multiply");
+const padsSubtract = document.querySelector("#subtract");
+const padsAdd = document.querySelector("#add");
+const padsClear = document.querySelector("#clear");
+const padsUndo = document.querySelector("#undo");
+const padsEqual = document.querySelector("#equal");
 const controlPad = document.querySelector(".controls");
-const display = document.querySelector(".display");
+const currentDisplay = document.querySelector(".current_display");
+const accumulatedDisplay = document.querySelector(".accumulated_display");
+
+let eraseResult = false;
 let number1;
 let number2;
 let operator = {
-    sign: "",
-    mathSymbol: ""
+  sign: "",
+  mathSymbol: "",
 };
+let result;
 
-controlPad.addEventListener('click', function(event) {
-  if (event.target.classList.contains('number')) {
+
+controlPad.addEventListener("click", function (event) {
+  if (event.target.classList.contains("number")) {
+    if (eraseResult === true) {
+      currentDisplay.textContent = "";
+      eraseResult = false;
+    }
     addToDisplay(event.target.textContent);
-  } else if (event.target.id === 'clear') {
+  } else if (event.target.id === "clear") {
     clearDisplay();
-  } else if (event.target.id == 'undo') {
+  } else if (event.target.id == "undo") {
     eraseLastChar();
-  } else if (event.target.classList.contains('operators')) {
-    number1 = Number(display.textContent);
-    addToDisplay(event.target.textContent);
-    operator.sign = event.target.textContent;
-    operator.mathSymbol = event.target.getAttribute('value');
-    clearDisplay();
-  } else if (event.target.id === 'equal') {
-    number2 = Number(display.textContent);
-    operate(number1, number2, operator);
+  } else if (event.target.classList.contains("operators")) {
+    if (accumulatedDisplay.textContent === "") {
+      number1 = Number(currentDisplay.textContent);
+      addToDisplay(event.target.textContent);
+      operator.sign = event.target.textContent;
+      operator.mathSymbol = event.target.getAttribute("value");
+      currentToAccumulated();
+    } else {
+      number2 = Number(currentDisplay.textContent);
+      addToDisplay(event.target.textContent);
+      operate();
+      // number1 = result;
+      operator.sign = event.target.textContent;
+      operator.mathSymbol = event.target.getAttribute("value");
+    }
+  } else if (event.target.id === "equal") {
+    number2 = Number(currentDisplay.textContent);
+    operate();
   }
 });
 
-padsClear.addEventListener('click', clearDisplay());
+padsClear.addEventListener("click", clearDisplay);
 
 function clearDisplay() {
-    display.textContent = "";
+  currentDisplay.textContent = "";
+  accumulatedDisplay.textContent = "";
+  number1 = undefined;
+  number2 = undefined;
+  eraseResult = false;
 }
 
 function eraseLastChar() {
-    display.textContent = display.textContent.slice(0, -1);
+  currentDisplay.textContent = currentDisplay.textContent.slice(0, -1);
 }
 
 function addToDisplay(padContent) {
-    display.append(padContent);
+  currentDisplay.append(padContent);
 }
 
-function operate(number1, number2, operator) {
-  let result;
+function currentToAccumulated() {
+  accumulatedDisplay.append(currentDisplay.textContent);
+  currentDisplay.textContent = "";
+}
+
+function operate() {
+  let operand1 = number1; // Use the global number1
+  let operand2 = number2; // Previously number2
   switch (operator.mathSymbol) {
-    case '+':
-      result = number1 + number2;
+    case "+":
+      result = operand1 + operand2;
       break;
-    case '-':
-      result = number1 - number2;
+    case "-":
+      result = operand1 - operand2;
       break;
-    case '*':
-      result = number1 * number2;
+    case "*":
+      result = operand1 * operand2;
       break;
-    case '/':
-      result = number1 / number2;
+    case "/":
+      if (operand2 !== 0) {
+        result = operand1 / operand2;
+      } else {
+        // Handle division by zero if necessary
+        result = "Error";
+      }
       break;
     default:
       // Handle unsupported operator
-      result = 'Unsupported operator';
+      result = "Unsupported operator";
   }
-  
-  display.textContent = `${number1} ${operator.sign} ${number2} = ${result}`;
+  currentToAccumulated();
+  number1 = result; // Update the global number1 with the operation result
+  currentDisplay.textContent = result;
+  eraseResult = true;
 }
+
+// When calling operate, do not pass the global variables as parameters
+// Just call operate();

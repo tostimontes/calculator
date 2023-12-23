@@ -31,10 +31,11 @@ h1 {
 
 .display_box {
     width: 100%;
-    height: 20%;
+    height: 30%;
     border: 2px solid black;
     background: #000;
 }
+
 
 .display {
     width: calc(100% - 2rem);
@@ -50,9 +51,24 @@ h1 {
     font-family: monospace;
 }
 
+.accumulated_display {
+    width: 100%;
+    height: 35%;
+    background-color: transparent;
+    font-size: 5.25rem;
+}
+
+.current_display {
+    width: 100%;
+    height: 65%;
+    background-color: transparent;
+    padding: 0.25rem;
+    font-size: 9.25rem;
+}
+
 .controls {
     width: 100%;
-    height: 80%;
+    height: 70%;
     display: flex;
     flex-direction: row;
     border: 2px solid black;
