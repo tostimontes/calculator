@@ -29,7 +29,7 @@ let operator = {
   mathSymbol: "",
 };
 let result;
-
+const operatorRegex = /[+-x÷]/;
 
 controlPad.addEventListener("click", function (event) {
   if (eraseResult === true) {
@@ -43,6 +43,12 @@ controlPad.addEventListener("click", function (event) {
   } else if (event.target.id == "undo") {
     eraseLastChar();
   } else if (event.target.classList.contains("operators")) {
+    if (
+      operatorRegex.test(accumulatedDisplay.textContent.slice(-1)) &&
+      currentDisplay.textContent === ""
+    ) {
+      return;
+    }
     if (accumulatedDisplay.textContent === "") {
       number1 = Number(currentDisplay.textContent);
       addToDisplay(event.target.textContent);
@@ -61,7 +67,10 @@ controlPad.addEventListener("click", function (event) {
     number2 = Number(currentDisplay.textContent);
     operate();
   } else if (event.target.id === "dot") {
-    if (currentDisplay.textContent.slice(-1) === "." || currentDisplay.textContent !== "") {
+    if (
+      currentDisplay.textContent.slice(-1) === "." ||
+      currentDisplay.textContent !== ""
+    ) {
       return null;
     } else if (currentDisplay.textContent === "") {
       addToDisplay("0");
@@ -130,5 +139,3 @@ function operate() {
 
 // When calling operate, do not pass the global variables as parameters
 // Just call operate();
-
-
