@@ -38,7 +38,7 @@ const keyMappings = {
   "*": () => preOperate("x", "*"),
   "/": () => preOperate("÷", "/"),
   c: clearDisplay,
-  u: eraseLastChar,
+  "Backspace": eraseLastChar,
   "Enter": equalOperation,
   ".": dotOperation
 };
