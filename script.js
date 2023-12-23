@@ -22,25 +22,25 @@ const currentDisplay = document.querySelector(".current_display");
 const accumulatedDisplay = document.querySelector(".accumulated_display");
 
 const keyMappings = {
-  "0": () => handleDigit(0),
-  "00": () => handleDigit(0o0),
-  "1": () => handleDigit(1),
-  "2": () => handleDigit(2),
-  "3": () => handleDigit(3),
-  "4": () => handleDigit(4),
-  "5": () => handleDigit(5),
-  "6": () => handleDigit(6),
-  "7": () => handleDigit(7),
-  "8": () => handleDigit(8),
-  "9": () => handleDigit(9),
-  // "+": () => handleOperator('+'),
-  // "-": () => handleOperator('-'),
-  // "*": () => handleOperator('*'),
-  // "/": () => handleOperator('/'),
-  "c": clearDisplay,
-  "u": eraseLastChar,
-  // "=": handleEqual,
-  // ".": handleDot
+  0: () => addToDisplay(0),
+  "00": () => addToDisplay(0o0),
+  1: () => addToDisplay(1),
+  2: () => addToDisplay(2),
+  3: () => addToDisplay(3),
+  4: () => addToDisplay(4),
+  5: () => addToDisplay(5),
+  6: () => addToDisplay(6),
+  7: () => addToDisplay(7),
+  8: () => addToDisplay(8),
+  9: () => addToDisplay(9),
+  "+": () => preOperate("+", "+"),
+  "-": () => preOperate("-", "-"),
+  "*": () => preOperate("x", "*"),
+  "/": () => preOperate("÷", "/"),
+  c: clearDisplay,
+  u: eraseLastChar,
+  "Enter": equalOperation,
+  ".": dotOperation
 };
 
 let eraseResult = false;
@@ -65,57 +65,84 @@ controlPad.addEventListener("click", function (event) {
   } else if (event.target.id == "undo") {
     eraseLastChar();
   } else if (event.target.classList.contains("operators")) {
-    if (
-      operatorRegex.test(accumulatedDisplay.textContent.slice(-1)) &&
-      currentDisplay.textContent === ""
-    ) {
-      return;
-    }
-    if (accumulatedDisplay.textContent === "") {
-      number1 = Number(currentDisplay.textContent);
-      addToDisplay(event.target.textContent);
-      operator.sign = event.target.textContent;
-      operator.mathSymbol = event.target.getAttribute("value");
-      currentToAccumulated();
-    } else {
-      number2 = Number(currentDisplay.textContent);
-      addToDisplay(event.target.textContent);
-      operate();
-      // number1 = result;
-      operator.sign = event.target.textContent;
-      operator.mathSymbol = event.target.getAttribute("value");
+    let eventOperator = event.target.textContent;
+    switch (eventOperator) {
+      case "+":
+        preOperate("+", "+");
+        break;
+      case "-":
+        preOperate("-", "-");
+        break;
+      case "x":
+        preOperate("x", "*");
+        break;
+      case "÷":
+        preOperate("÷", "/");
+        break;
+      default:
+        break;
     }
   } else if (event.target.id === "equal") {
-    number2 = Number(currentDisplay.textContent);
-    operate();
+    equalOperation();
   } else if (event.target.id === "dot") {
-    if (
-      currentDisplay.textContent.slice(-1) === "." ||
-      currentDisplay.textContent !== ""
-    ) {
-      return null;
-    } else if (currentDisplay.textContent === "") {
-      addToDisplay("0");
-      addToDisplay(event.target.textContent);
-    } else {
-      addToDisplay(event.target.textContent);
-    }
+    dotOperation();
   }
 });
 
 document.addEventListener("keyup", (event) => {
+  if (eraseResult === true) {
+    currentDisplay.textContent = "";
+    eraseResult = false;
+  }
   if (keyMappings[`${event.key}`]) {
     keyMappings[`${event.key}`]();
   }
-})
-
-function handleDigit(digit) {
-  addToDisplay(digit);  
-}
-
-
+});
 
 padsClear.addEventListener("click", clearDisplay);
+
+function preOperate(text, symbol) {
+  if (
+    operatorRegex.test(accumulatedDisplay.textContent.slice(-1)) &&
+    currentDisplay.textContent === ""
+  ) {
+    return;
+  }
+  roundedDisplay = Math.round(currentDisplay.textContent * 1000) / 1000;
+  if (accumulatedDisplay.textContent === "") {
+    currentDisplay.textContent = roundedDisplay;
+    number1 = roundedDisplay;
+    addToDisplay(text);
+    operator.sign = text;
+    operator.mathSymbol = symbol;
+    currentToAccumulated();
+  } else {
+    currentDisplay.textContent = roundedDisplay;
+    number2 = roundedDisplay;
+    addToDisplay(text);
+    operate();
+    operator.sign = text;
+    operator.mathSymbol = symbol;
+  }
+}
+
+function equalOperation() {
+  number2 = Number(currentDisplay.textContent);
+  operate();
+}
+
+function dotOperation() {
+  if (
+    currentDisplay.textContent.slice(-1) === "." || currentDisplay.textContent.includes(".")
+  ) {
+    return null;
+  } else if (currentDisplay.textContent === "") {
+    addToDisplay("0");
+    addToDisplay(".");
+  } else {
+    addToDisplay(".");
+  }
+}
 
 function clearDisplay() {
   currentDisplay.textContent = "";
@@ -166,10 +193,9 @@ function operate() {
   }
   result = Math.round(result * 1000) / 1000;
   currentToAccumulated();
-  number1 = result; // Update the global number1 with the operation result
+  number1 = result;
   currentDisplay.textContent = result;
   eraseResult = true;
 }
 
-// When calling operate, do not pass the global variables as parameters
-// Just call operate();
+
