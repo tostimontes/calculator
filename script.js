@@ -21,6 +21,28 @@ const controlPad = document.querySelector(".controls");
 const currentDisplay = document.querySelector(".current_display");
 const accumulatedDisplay = document.querySelector(".accumulated_display");
 
+const keyMappings = {
+  "0": () => handleDigit(0),
+  "00": () => handleDigit(0o0),
+  "1": () => handleDigit(1),
+  "2": () => handleDigit(2),
+  "3": () => handleDigit(3),
+  "4": () => handleDigit(4),
+  "5": () => handleDigit(5),
+  "6": () => handleDigit(6),
+  "7": () => handleDigit(7),
+  "8": () => handleDigit(8),
+  "9": () => handleDigit(9),
+  // "+": () => handleOperator('+'),
+  // "-": () => handleOperator('-'),
+  // "*": () => handleOperator('*'),
+  // "/": () => handleOperator('/'),
+  "c": clearDisplay,
+  "u": eraseLastChar,
+  // "=": handleEqual,
+  // ".": handleDot
+};
+
 let eraseResult = false;
 let number1;
 let number2;
@@ -80,6 +102,18 @@ controlPad.addEventListener("click", function (event) {
     }
   }
 });
+
+document.addEventListener("keyup", (event) => {
+  if (keyMappings[`${event.key}`]) {
+    keyMappings[`${event.key}`]();
+  }
+})
+
+function handleDigit(digit) {
+  addToDisplay(digit);  
+}
+
+
 
 padsClear.addEventListener("click", clearDisplay);
 
