@@ -1,112 +1,166 @@
 * {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 :root {
-    font-size: 62.5%;
+  font-size: 62.5%;
 }
 
 html {
-    width: 100%;
-    height: 100%;
+  width: 100%;
+  height: 100%;
+  background: url("bg-calculator.avif") no-repeat center center fixed;
+  background-size: cover;
 }
 
 body {
-    font-size: 1.6rem;
-    width: 100%;
-    height: 100%;
+  font-size: 1.6rem;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 h1 {
-    text-align: center;
+  font-size: 10rem;
+  font-weight: bold;
+  position: relative;
+  color: transparent;
+  text-shadow: 3px 3px 0 rgba(0, 0, 0, 0.2);
+  transform: skew(-10deg);
+  display: inline-block;
+  text-align: center;
+  width: 70rem;
+  background-size: 100%;
+}
+
+h1::before {
+  content: attr(data-text); /* Use the data attribute */
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: linear-gradient(
+    to left,
+    violet,
+    indigo,
+    blue,
+    green,
+    yellow,
+    orange,
+    red
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  z-index: -1;
 }
 
 .calculator {
-    width: 70rem;
-    height: 70rem;
-    margin: 10rem auto 0 auto;
-    display: flex;
-    flex-direction: column;
-    border-radius: 15px;
-    gap: 3rem;
+  width: 70rem;
+  height: 70rem;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  border-radius: 15px;
+  gap: 3rem;
 }
 
 .display_box {
-    width: 100%;
-    height: 30%;
-    border: 2px solid black;
-    background: #000;
-    border-radius: 15px;
-
+  width: 100%;
+  height: 30%;
+  border: 2px solid black;
+  background: #000;
+  border-radius: 15px;
 }
 
-
 .display {
-    width: calc(100% - 2rem);
-    height: calc(100% - 2rem);
-    margin: 1rem;
-    border: 2px solid black;
-    border-radius: 15px;
-    background: linear-gradient(to bottom, #444 0%, #222 100%);
-    color: #ff6700;
-    padding: 1.6rem;
-    font-size: 8rem;
-    text-align: right;
-    font-family: monospace;
+  width: calc(100% - 2rem);
+  height: calc(100% - 2rem);
+  margin: 1rem;
+  border: 2px solid black;
+  border-radius: 15px;
+  background: linear-gradient(to bottom, #444 0%, #222 100%);
+  color: #ff6700;
+  padding: 1.6rem;
+  font-size: 8rem;
+  text-align: right;
+  font-family: monospace;
 }
 
 .accumulated_display {
-    width: 100%;
-    height: 35%;
-    background-color: transparent;
-    font-size: 5.25rem;
+  width: 100%;
+  height: 35%;
+  background-color: transparent;
+  font-size: 5.25rem;
 }
 
 .current_display {
-    width: 100%;
-    height: 65%;
-    background-color: transparent;
-    padding: 0.25rem;
-    font-size: 9.25rem;
+  width: 100%;
+  height: 65%;
+  background-color: transparent;
+  padding: 0.25rem;
+  font-size: 9.25rem;
 }
 
 .controls {
-    width: 100%;
-    height: 70%;
-    display: flex;
-    flex-direction: row;
-    border-radius: 15px;
-    gap: 1.5rem;
+  width: 100%;
+  height: 70%;
+  display: flex;
+  flex-direction: row;
+  border-radius: 15px;
+  gap: 1.5rem;
 }
 
 .controls_columns {
-    width: 20%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
+  width: 20%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+#add,
+#subtract,
+#multiply,
+#divide {
+  background: linear-gradient(to bottom, #ff6700 0%, #ff8c42 100%);
+  color: whitesmoke;
 }
 
 .pads {
-    border: 1px solid black;
-    font-size: 4rem;
-    font-family: monospace;
-    text-shadow:
-    -1px -1px 0 #000,  
-     1px -1px 0 #000,
-    -1px  1px 0 #000,
-     1px  1px 0 #000;
-    width: 100%;
-    height: 25%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 12px;
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2); /* Shadow for depth */
-    background: linear-gradient(to bottom, teal 0%, cyan 100%);
-    color: #ff6700;
+  border: 1px solid black;
+  font-size: 4rem;
+  font-family: monospace;
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000,
+    1px 1px 0 #000;
+  width: 100%;
+  height: 25%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2); /* Shadow for depth */
+  background: linear-gradient(to bottom, teal 0%, cyan 100%);
+  color: #ff6700;
+}
+
+.pads:hover,
+#add:hover,
+#subtract:hover,
+#multiply:hover,
+#divide:hover {
+  cursor: pointer;
+  background: linear-gradient(to bottom, #444 0%, #222 100%);
+  color: whitesmoke;
+}
+
+.pads:active {
+  background: linear-gradient(to bottom, #222 0%, #444 100%);
 }
 
 #equal {
-    height: 50%;
+  height: 50%;
 }
