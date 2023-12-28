@@ -41,10 +41,7 @@ function adjustFontSizeToFit(container) {
   let contentWidth = container.scrollWidth;
   let containerWidth = container.clientWidth;
 
-  while (
-    contentWidth > containerWidth &&
-    container.style.fontSize !== "0px"
-  ) {
+  while (contentWidth > containerWidth && container.style.fontSize !== "0px") {
     let currentFontSize = parseFloat(
       window.getComputedStyle(container, null).getPropertyValue("font-size")
     );
@@ -109,7 +106,7 @@ function preOperate(text, symbol) {
     return;
   }
   if (accumulatedDisplay.textContent.slice(-1) === "=") {
-    updateOperatorObject(text, symbol)
+    updateOperatorObject(text, symbol);
     accumulatedDisplay.textContent = `${number1}${text}`;
     currentDisplay.textContent = "";
     return;
@@ -119,14 +116,14 @@ function preOperate(text, symbol) {
     currentDisplay.textContent = roundedDisplay;
     number1 = roundedDisplay;
     addToDisplay(text);
-    updateOperatorObject(text, symbol)
+    updateOperatorObject(text, symbol);
     currentToAccumulated();
   } else {
     currentDisplay.textContent = roundedDisplay;
     number2 = roundedDisplay;
     addToDisplay(text);
     operate();
-    updateOperatorObject(text, symbol)
+    updateOperatorObject(text, symbol);
   }
 }
 
@@ -135,9 +132,8 @@ function equalOperation() {
     return;
   }
   number2 = Number(currentDisplay.textContent);
-  addToDisplay("=")
+  addToDisplay("=");
   operate();
-
 }
 
 function dotOperation() {
@@ -183,8 +179,8 @@ function updateOperatorObject(text, symbol) {
 }
 
 function operate() {
-  let operand1 = number1; // Use the global number1
-  let operand2 = number2; // Previously number2
+  let operand1 = number1;
+  let operand2 = number2;
   switch (operator.mathSymbol) {
     case "+":
       result = operand1 + operand2;
