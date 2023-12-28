@@ -23,7 +23,6 @@ const accumulatedDisplay = document.querySelector(".accumulated_display");
 
 const keyMappings = {
   0: () => addToDisplay(0),
-  "00": () => addToDisplay(0o0),
   1: () => addToDisplay(1),
   2: () => addToDisplay(2),
   3: () => addToDisplay(3),
@@ -38,9 +37,9 @@ const keyMappings = {
   "*": () => preOperate("x", "*"),
   "/": () => preOperate("÷", "/"),
   c: clearDisplay,
-  "Backspace": eraseLastChar,
-  "Enter": equalOperation,
-  ".": dotOperation
+  Backspace: eraseLastChar,
+  Enter: equalOperation,
+  ".": dotOperation,
 };
 
 let eraseResult = false;
@@ -51,7 +50,29 @@ let operator = {
   mathSymbol: "",
 };
 let result;
-const operatorRegex = /[+-x÷]/;
+const operatorRegex = /[+\-x÷]/;
+
+// function adjustFontSizeToFit(container) {
+//   let contentHeight = container.scrollHeight;
+//   let containerHeight = container.offsetHeight;
+
+//   while (
+//     contentHeight > containerHeight &&
+//     container.style.fontSize !== "0px"
+//   ) {
+//     let currentFontSize = parseFloat(
+//       window.getComputedStyle(container, null).getPropertyValue("font-size")
+//     );
+//     container.style.fontSize = currentFontSize - 1 + "px";
+//     contentHeight = container.scrollHeight;
+//   }
+// }
+
+// const contentBox = document.getElementById("content-box");
+// adjustFontSizeToFit(contentBox);
+
+
+// TODO: truncate to display, several operators en suite,
 
 controlPad.addEventListener("click", function (event) {
   if (eraseResult === true) {
@@ -108,32 +129,42 @@ function preOperate(text, symbol) {
   ) {
     return;
   }
+  if (accumulatedDisplay.textContent.slice(-1) === "=") {
+    updateOperatorObject(text, symbol)
+    accumulatedDisplay.textContent = `${number1}${text}`;
+    currentDisplay.textContent = "";
+    return;
+  }
   roundedDisplay = Math.round(currentDisplay.textContent * 1000) / 1000;
   if (accumulatedDisplay.textContent === "") {
     currentDisplay.textContent = roundedDisplay;
     number1 = roundedDisplay;
     addToDisplay(text);
-    operator.sign = text;
-    operator.mathSymbol = symbol;
+    updateOperatorObject(text, symbol)
     currentToAccumulated();
   } else {
     currentDisplay.textContent = roundedDisplay;
     number2 = roundedDisplay;
     addToDisplay(text);
     operate();
-    operator.sign = text;
-    operator.mathSymbol = symbol;
+    updateOperatorObject(text, symbol)
   }
 }
 
 function equalOperation() {
+  if (accumulatedDisplay.textContent.slice(-1) === "=") {
+    return;
+  }
   number2 = Number(currentDisplay.textContent);
+  addToDisplay("=")
   operate();
+
 }
 
 function dotOperation() {
   if (
-    currentDisplay.textContent.slice(-1) === "." || currentDisplay.textContent.includes(".")
+    currentDisplay.textContent.slice(-1) === "." ||
+    currentDisplay.textContent.includes(".")
   ) {
     return null;
   } else if (currentDisplay.textContent === "") {
@@ -163,6 +194,11 @@ function addToDisplay(padContent) {
 function currentToAccumulated() {
   accumulatedDisplay.append(currentDisplay.textContent);
   currentDisplay.textContent = "";
+}
+
+function updateOperatorObject(text, symbol) {
+  operator.sign = text;
+  operator.mathSymbol = symbol;
 }
 
 function operate() {
@@ -197,5 +233,3 @@ function operate() {
   currentDisplay.textContent = result;
   eraseResult = true;
 }
-
-
