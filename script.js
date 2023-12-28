@@ -52,27 +52,21 @@ let operator = {
 let result;
 const operatorRegex = /[+\-x÷]/;
 
-// function adjustFontSizeToFit(container) {
-//   let contentHeight = container.scrollHeight;
-//   let containerHeight = container.offsetHeight;
+function adjustFontSizeToFit(container) {
+  let contentWidth = container.scrollWidth;
+  let containerWidth = container.clientWidth;
 
-//   while (
-//     contentHeight > containerHeight &&
-//     container.style.fontSize !== "0px"
-//   ) {
-//     let currentFontSize = parseFloat(
-//       window.getComputedStyle(container, null).getPropertyValue("font-size")
-//     );
-//     container.style.fontSize = currentFontSize - 1 + "px";
-//     contentHeight = container.scrollHeight;
-//   }
-// }
-
-// const contentBox = document.getElementById("content-box");
-// adjustFontSizeToFit(contentBox);
-
-
-// TODO: truncate to display, several operators en suite,
+  while (
+    contentWidth > containerWidth &&
+    container.style.fontSize !== "0px"
+  ) {
+    let currentFontSize = parseFloat(
+      window.getComputedStyle(container, null).getPropertyValue("font-size")
+    );
+    container.style.fontSize = currentFontSize - 1 + "px";
+    contentWidth = container.scrollWidth;
+  }
+}
 
 controlPad.addEventListener("click", function (event) {
   if (eraseResult === true) {
@@ -189,10 +183,12 @@ function eraseLastChar() {
 
 function addToDisplay(padContent) {
   currentDisplay.append(padContent);
+  adjustFontSizeToFit(currentDisplay);
 }
 
 function currentToAccumulated() {
   accumulatedDisplay.append(currentDisplay.textContent);
+  adjustFontSizeToFit(accumulatedDisplay);
   currentDisplay.textContent = "";
 }
 
