@@ -37,7 +37,7 @@ h1 {
 }
 
 h1::before {
-  content: attr(data-text); /* Use the data attribute */
+  content: attr(data-text);
   position: absolute;
   top: 0;
   left: 0;
@@ -142,7 +142,7 @@ h1::before {
   align-items: center;
   justify-content: center;
   border-radius: 12px;
-  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2); /* Shadow for depth */
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
   background: linear-gradient(to bottom, teal 0%, cyan 100%);
   color: #ff6700;
 }
