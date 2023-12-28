@@ -131,7 +131,8 @@ function equalOperation() {
   if (
     accumulatedDisplay.textContent.slice(-1) === "=" ||
     (operatorRegex.test(accumulatedDisplay.textContent.slice(-1)) && currentDisplay.textContent === "") ||
-    currentDisplay.textContent === ""
+    currentDisplay.textContent === "" ||
+    number1 === undefined
   ) {
     return;
   }
