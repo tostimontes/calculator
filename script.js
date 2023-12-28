@@ -128,7 +128,11 @@ function preOperate(text, symbol) {
 }
 
 function equalOperation() {
-  if (accumulatedDisplay.textContent.slice(-1) === "=") {
+  if (
+    accumulatedDisplay.textContent.slice(-1) === "=" ||
+    (operatorRegex.test(accumulatedDisplay.textContent.slice(-1)) && currentDisplay.textContent === "") ||
+    currentDisplay.textContent === ""
+  ) {
     return;
   }
   number2 = Number(currentDisplay.textContent);
